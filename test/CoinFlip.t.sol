@@ -54,14 +54,9 @@ contract TestCoinFlip is BaseTest {
             level.flip(ourGuess);
             emit log_named_uint("Consecutive wins", level.consecutiveWins());
 
-            mineBlocks(1);
+            utilities.mineBlocks(1);
         }
 
         vm.stopPrank();
-    }
-
-    function mineBlocks(uint256 numBlocks) internal {
-        uint256 targetBlock = block.number + numBlocks;
-        vm.roll(targetBlock);
     }
 }
