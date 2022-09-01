@@ -36,6 +36,7 @@ contract TestKing is BaseTest {
     function exploitLevel() internal override {
         vm.startPrank(player, player);
         /** CODE YOUR EXPLOIT HERE */
+        // https://ethernaut.openzeppelin.com/level/0x43BA674B4fbb8B157b7441C2187bCdD2cdF84FD5
 
         // As we said in the previous CTF challenge the only way to receive ether are via
         // 1) A receive function
